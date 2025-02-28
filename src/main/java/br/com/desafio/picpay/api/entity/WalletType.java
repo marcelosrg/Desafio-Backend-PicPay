@@ -1,16 +1,9 @@
 package br.com.desafio.picpay.api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.UUID;
 @Entity
 @Table(name = "tb_wallet_type")
-@Getter
-@Setter
-@AllArgsConstructor
 public class WalletType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,27 +11,47 @@ public class WalletType {
 
     private String description;
 
-    public WalletType(){
+    @Version
+    private Integer version; // Controle de versão para evitar conflitos de concorrência
 
+    public WalletType() {}
+
+    public WalletType(Long id, String description) {
+        this.id = id;
+        this.description = description;
     }
 
-    public enum Enum{
+    // Métodos públicos (Getter e Setter)
+    public Long getId() {
+        return id; // Confirma que este método agora está acessível
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public enum Enum {
         USER(1L, "user"),
         MERCHANT(2L, "merchant");
 
-        Enum(long id, String description) {
+        private final Long id;
+        private final String description;
+
+        Enum(Long id, String description) {
             this.id = id;
             this.description = description;
-
         }
 
-        private Long id;
-
-        private String description;
-
-        public WalletType get(){
-            return  new WalletType(id, description);
+        public WalletType get() {
+            return new WalletType(id, description);
         }
     }
-
 }
